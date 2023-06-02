@@ -1,9 +1,8 @@
 from django.db import models
-
-
-from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 import datetime
+from psqlextra.types import PostgresPartitioningMethod
+from psqlextra.models import PostgresPartitionedModel
 
 
 class PropertyType(models.Model):
@@ -49,7 +48,11 @@ class Pharmacy(models.Model):
     drugs = models.ManyToManyField(Drug, through="DrugInPharmacy")
 
 
-class DrugInPharmacy(models.Model):
+class DrugInPharmacy(PostgresPartitionedModel):
+    class PartitioningMeta:
+        method = PostgresPartitioningMethod.RANGE
+        key = ["delivery_date"]
+
     drug = models.ForeignKey(Drug, on_delete=models.CASCADE)
     pharmacy = models.ForeignKey(Pharmacy, on_delete=models.CASCADE)
     delivery_date = models.DateField()
