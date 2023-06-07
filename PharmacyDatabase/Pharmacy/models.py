@@ -1,27 +1,50 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 import datetime
+
+from django.db.models import UniqueConstraint
+from psqlextra.indexes import UniqueIndex, ConditionalUniqueIndex
 from psqlextra.types import PostgresPartitioningMethod
 from psqlextra.models import PostgresPartitionedModel
 
 
 class PropertyType(models.Model):
+    class Meta:
+        indexes = [
+            UniqueIndex(fields=['name']),
+        ]
     name = models.CharField(max_length=32, unique=True)
 
 
 class District(models.Model):
+    class Meta:
+        indexes = [
+            UniqueIndex(fields=['name']),
+        ]
     name = models.CharField(max_length=32, unique=True)
 
 
 class DosageForm(models.Model):
+    class Meta:
+        indexes = [
+            UniqueIndex(fields=['name']),
+        ]
     name = models.CharField(max_length=50, unique=True)
 
 
 class PharmacologicalGroup(models.Model):
+    class Meta:
+        indexes = [
+            UniqueIndex(fields=['name']),
+        ]
     name = models.CharField(max_length=50, unique=True)
 
 
 class Country(models.Model):
+    class Meta:
+        indexes = [
+            UniqueIndex(fields=['name']),
+        ]
     name = models.CharField(max_length=32, unique=True)
 
 
