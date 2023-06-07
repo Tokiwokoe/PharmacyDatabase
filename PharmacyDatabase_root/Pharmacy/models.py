@@ -45,7 +45,7 @@ class Country(models.Model):
         indexes = [
             UniqueIndex(fields=['name']),
         ]
-    name = models.CharField(max_length=32, unique=True)
+    name = models.CharField(max_length=50, unique=True)
 
 
 class Company(models.Model):
