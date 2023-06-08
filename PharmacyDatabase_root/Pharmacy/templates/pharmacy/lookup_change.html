@@ -1,0 +1,13 @@
+{% extends 'pharmacy/base.html' %}
+{% block content %}
+{% if name == 'district' %}<form action="{% url 'district_change' lookup.id %}" method="POST">{% endif %}
+  {% if name == 'country' %}<form action="{% url 'country_change' lookup.id %}" method="POST">{% endif %}
+    {% if name == 'pharmacological_group' %}<form action="{% url 'pharmacological_group_change' lookup.id %}" method="POST">{% endif %}
+      {% if name == 'dosage_form' %}<form action="{% url 'dosage_form_change' lookup.id %}" method="POST">{% endif %}
+        {% if name == 'property_type' %}<form action="{% url 'property_type_change' lookup.id %}" method="POST">{% endif %}
+  {% csrf_token %}
+  <label for="name">Название:</label><br>
+  <input type="text" id="name" name="name" value={{lookup.name}}><br>
+  <input type="submit" value="Submit">
+</form>
+{% endblock content %}

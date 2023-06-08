@@ -8,6 +8,21 @@
         {% for item in lookup %}
         <tr>
             <td>{{ item.name }}</td>
+            {% if name == 'district' %}
+            <td><a href="{% url 'district_change' item.id %}">Изменить</a></td>
+            {% endif %}
+            {% if name == 'pharmacological_group' %}
+            <td><a href="{% url 'pharmacological_group_change' item.id %}">Изменить</a></td>
+            {% endif %}
+            {% if name == 'country' %}
+            <td><a href="{% url 'country_change' item.id %}">Изменить</a></td>
+            {% endif %}
+            {% if name == 'dosage_form' %}
+            <td><a href="{% url 'dosage_form_change' item.id %}">Изменить</a></td>
+            {% endif %}
+            {% if name == 'property_type' %}
+            <td><a href="{% url 'property_type_change' item.id %}">Изменить</a></td>
+            {% endif %}
         </tr>
         {% endfor %}
     </table>

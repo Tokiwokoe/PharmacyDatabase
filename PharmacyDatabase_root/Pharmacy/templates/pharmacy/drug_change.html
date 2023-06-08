@@ -14,8 +14,7 @@
             <td>{{ item.company.name }}</td>
             <td>{{ item.dosage_form.name }}</td>
             <td>{{ item.pharmacological_group.name }}</td>
-            <td><a href="{% url 'drug_change' item.id %}">Изменить</a></td>
         </tr>
         {% endfor %}
-    </table>
+</table>
 {% endblock content %}
