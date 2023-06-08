@@ -1,0 +1,23 @@
+{% extends 'pharmacy/base.html' %}
+
+{% block content %}
+    <table border="1">
+        <tr>
+            <th>Название</th>
+            <th>Год основания</th>
+            <th>Адрес</th>
+            <th>Страна</th>
+            <th>Тип собственности</th>
+        </tr>
+        {% for item in table %}
+        <tr>
+            <td>{{ item.number }}</td>
+            <td>{{ item.year }}</td>
+            <td>{{ item.address }}</td>
+            <td>{{ item.country.name }}</td>
+            <td>{{ item.property_type.name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock content %}

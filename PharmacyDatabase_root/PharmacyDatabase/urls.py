@@ -22,5 +22,5 @@ import Pharmacy.urls
 urlpatterns = [
     path('pharmacy_admin/', include('Pharmacy.urls')),
     path('admin/', admin.site.urls),
-    path('', Pharmacy.urls.index),
+    path('', Pharmacy.urls.index, name='index'),
 ]

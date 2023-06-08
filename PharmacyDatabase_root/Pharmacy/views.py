@@ -29,3 +29,18 @@ def country(request):
 def pharmacological_group(request):
     pharmacological_group = PharmacologicalGroup.objects.all()
     return render(request, 'pharmacy/lookup.html', {'lookup': pharmacological_group, 'title': 'Фармакологические группы'})
+
+
+def pharmacy(request):
+    pharmacy = Pharmacy.objects.all()
+    return render(request, 'pharmacy/pharmacy.html', {'table': pharmacy, 'title': 'Аптеки'})
+
+
+def drug(request):
+    drug = Drug.objects.all()
+    return render(request, 'pharmacy/drug.html', {'table': drug, 'title': 'Препараты'})
+
+
+def company(request):
+    company = Company.objects.all()
+    return render(request, 'pharmacy/company.html', {'table': company, 'title': 'Компании-производители'})

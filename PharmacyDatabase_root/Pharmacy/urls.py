@@ -8,4 +8,7 @@ urlpatterns = [
     path('district/', district, name='district'),
     path('country/', country, name='country'),
     path('pharmacological_group/', pharmacological_group, name='pharmacological_group'),
+    path('pharmacy/', pharmacy, name='pharmacy'),
+    path('drug/', drug, name='drug'),
+    path('company/', company, name='company'),
 ]

@@ -1,0 +1,21 @@
+{% extends 'pharmacy/base.html' %}
+
+{% block content %}
+    <table border="1">
+        <tr>
+            <th>Название</th>
+            <th>Компания-производитель</th>
+            <th>Форма выпуска</th>
+            <th>Фармакологическая группа</th>
+        </tr>
+        {% for item in table %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.company }}</td>
+            <td>{{ item.dosage_from.name }}</td>
+            <td>{{ item.pharmacological_group.name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock content %}
