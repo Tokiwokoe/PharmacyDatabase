@@ -1,6 +1,9 @@
-from django.http import HttpResponse
+from django.db import connection
 from django.shortcuts import render, redirect
 from .models import *
+import json
+from openpyxl import Workbook
+from django.http import HttpResponse
 
 
 def index(request):
@@ -105,3 +108,62 @@ def drug_change(request, id):
 def company_change(request, id):
     table = Company.objects.get(id=id)
     return render(request, 'pharmacy/company_change.html', {'table': table})
+
+
+def execute_query(request):
+    if request.method == 'POST':
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM query15(4);")
+            results = cursor.fetchall()
+
+        return render(request, 'pharmacy/result.html', {'results': results})
+
+    return render(request, 'index.html')
+
+
+def generate_chart(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM query15(4);")
+        results = cursor.fetchall()
+
+    # Process the results and prepare data for the chart
+    labels = [result[0] for result in results]
+    data = [result[1] for result in results]
+
+    # Pass the data to the template
+    chart_data = {
+        'labels': labels,
+        'data': data,
+    }
+
+    return render(request, 'pharmacy/chart.html', {'chart_data': json.dumps(chart_data)})
+
+
+def export_to_excel(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM query15(4);")
+        results = cursor.fetchall()
+
+    # Create a new workbook and get the active sheet
+    wb = Workbook()
+    sheet = wb.active
+
+    # Write the column headers
+    sheet['A1'] = 'Компания-производитель'
+    sheet['B1'] = 'Всего препаратов'
+
+    # Write the result rows
+    for row_num, result in enumerate(results, start=2):
+        sheet[f'A{row_num}'] = result[0]
+        sheet[f'B{row_num}'] = result[1]
+
+    # Set the response content type
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+    # Set the file name
+    response['Content-Disposition'] = 'attachment; filename=query15.xlsx'
+
+    # Save the workbook to the response
+    wb.save(response)
+
+    return response

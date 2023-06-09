@@ -1,0 +1,32 @@
+{% extends 'pharmacy/base.html' %}
+{% block content %}
+<title>Запросы</title>
+    <h2>Запрос на запросе по принципу итогового запроса</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Компания-производитель</th>
+                <th>Всего лекарств</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+            <tr>
+                <td>{{ result.0 }}</td>
+                <td>{{ result.1 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        <form method="post" action="{% url 'generate_chart' %}" style="display: inline-block;">
+            {% csrf_token %}
+            <input type="submit" value="Диаграмма">
+        </form>
+
+        <form method="post" action="{% url 'export_to_excel' %}" style="display: inline-block;">
+            {% csrf_token %}
+            <input type="submit" value="Экспорт в Excel">
+        </form>
+    </div>
+{% endblock content %}

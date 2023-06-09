@@ -2,7 +2,9 @@ from django.urls import path
 from Pharmacy.views import *
 
 urlpatterns = [
-    path('', index, name='pharmacy_index'),
+    path('', execute_query, name='execute_query'),
+    path('generate-chart/', generate_chart, name='generate_chart'),
+    path('export-to-excel/', export_to_excel, name='export_to_excel'),
 
     path('property_type/', property_type, name='property_type'),
     path('dosage_form/', dosage_form, name='dosage_form'),

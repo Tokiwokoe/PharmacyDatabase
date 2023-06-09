@@ -1,1 +1,9 @@
 {% extends 'pharmacy/base.html' %}
+
+{% block content %}
+    <h1>Execute Query</h1>
+    <form method="post" action="{% url 'execute_query' %}">
+        {% csrf_token %}
+        <input type="submit" value="Execute">
+    </form>
+{% endblock content %}
