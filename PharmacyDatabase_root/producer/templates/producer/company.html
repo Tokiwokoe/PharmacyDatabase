@@ -1,0 +1,28 @@
+{% extends 'producer/base.html' %}
+
+{% block content %}
+<a href="{% url 'producer_company_create' %}" class="btn btn-primary">Добавить компанию</a>
+    <table border="1">
+        <tr>
+            <th>Название</th>
+            <th>Год основания</th>
+            <th>Адрес</th>
+            <th>Страна</th>
+            <th>Тип собственности</th>
+        </tr>
+        {% for item in table %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.year }}</td>
+            <td>{{ item.address }}</td>
+            <td>{{ item.country.name }}</td>
+            <td>{{ item.property_type.name }}</td>
+            <td>
+            {% if item.id == 101 %}
+                <a href="{% url 'producer_company_update' company_id=item.id %}">Изменить</a>
+            {% endif %}
+        </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock content %}

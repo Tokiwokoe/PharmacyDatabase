@@ -1,0 +1,21 @@
+{% extends 'producer/base.html' %}
+
+{% block content %}
+<a href="{% url 'producer_drug_create' %}" class="btn btn-primary">Добавить препарат</a>
+<table border="1">
+        <tr>
+            <th>Название</th>
+            <th>Компания-производитель</th>
+            <th>Форма выпуска</th>
+            <th>Фармакологическая группа</th>
+        </tr>
+        {% for item in table %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.company.name }}</td>
+            <td>{{ item.dosage_form.name }}</td>
+            <td>{{ item.pharmacological_group.name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock content %}

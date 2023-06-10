@@ -1,0 +1,21 @@
+{% extends 'producer/base.html' %}
+
+{% block content %}
+
+<table border="1">
+    <tr>
+        <th>Номер аптеки</th>
+        <th>Телефон</th>
+        <th>Район</th>
+        <th>Тип собственности</th>
+    </tr>
+    {% for item in table %}
+    <tr>
+        <td>{{ item.number }}</td>
+        <td>{{ item.phone }}</td>
+        <td>{{ item.district.name }}</td>
+        <td>{{ item.property_type.name }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

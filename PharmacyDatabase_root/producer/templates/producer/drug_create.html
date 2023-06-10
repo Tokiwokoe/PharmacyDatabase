@@ -1,0 +1,59 @@
+{% extends 'producer/base.html' %}
+
+{% block content %}
+<h1>Добавление препарата</h1>
+
+
+<form method="post" action="{% url 'producer_drug_create' %}">
+  {% csrf_token %}
+
+  <div class="form-group">
+    <label for="name">Название препарата:</label>
+    <input type="text" class="form-control" id="name" name="name" required>
+  </div>
+
+  <input type="hidden" id="id" name="id" value="{{ form.initial.id }}">
+
+  <div class="form-group">
+    <label for="company">Компания-производитель:</label>
+    <select class="form-control" id="company" name="company" required>
+      {% for company in companies %}
+        <option value="{{ company.id }}">{{ company.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="dosage_form">Форма выпуска:</label>
+    <select class="form-control" id="dosage_form" name="dosage_form" required>
+      {% for dosage_form in dosage_forms %}
+        <option value="{{ dosage_form.id }}">{{ dosage_form.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="pharmacological_group">Фармакологическая группа:</label>
+    <select class="form-control" id="pharmacological_group" name="pharmacological_group" required>
+      {% for pharmacological_group in pharmacological_groups %}
+        <option value="{{ pharmacological_group.id }}">{{ pharmacological_group.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+
+  <button type="submit" class="btn btn-primary">Добавить</button>
+
+  {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+      {% for field_errors in form.errors.values %}
+        {% for error in field_errors %}
+          {{ error }}
+        {% endfor %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+</form>
+
+{% endblock content %}

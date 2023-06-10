@@ -7,24 +7,22 @@ from openpyxl import Workbook
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from supplier.views import supplier_index
+from producer.views import producer_index
 
 
 @login_required  # Декоратор, требующий аутентификации пользователя
 def index(request):
-    if request.user.groups.filter(name='pharmacy_admin').exists():
+    if request.user.groups.filter(name='administrator').exists():
         # Редирект для администратора
         return render(request, 'pharmacy/index.html', {'title': 'Режим запросов'})
     elif request.user.groups.filter(name='supplier').exists():
         # Редирект для поставщика
-        return supplier.views.supplier_index(request)
-    else:
-        return HttpResponse('Unknown user type')
-"""
+        return render(request, 'supplier/index.html')
+    elif request.user.groups.filter(name='producer').exists():
+        return render(request, 'producer/index.html')
     else:
         # Редирект для остальных пользователей
         return render(request, 'user/index.html')
-        """
-
 
 def property_type(request):
     property_type = PropertyType.objects.all()

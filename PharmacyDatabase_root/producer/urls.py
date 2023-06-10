@@ -1,0 +1,36 @@
+from django.urls import path
+from producer.views import (
+    producer_index,
+    producer_dosage_form,
+    producer_company,
+    producer_country,
+    producer_district,
+    producer_drug,
+    producer_pharmacy,
+    producer_property_type,
+    producer_pharmacological_group,
+    producer_company_update,
+    producer_company_create,
+    producer_company_delete,
+    producer_drug_update,
+    producer_drug_create,
+    producer_drug_delete,
+)
+
+urlpatterns = [
+    path('', producer_index, name='producer_index'),
+    path('dosage_form', producer_dosage_form, name='producer_dosage_form'),
+    path('company', producer_company, name='producer_company'),
+    path('country', producer_country, name='producer_country'),
+    path('district', producer_district, name='producer_district'),
+    path('drug', producer_drug, name='producer_drug'),
+    path('pharmacy', producer_pharmacy, name='producer_pharmacy'),
+    path('property_type', producer_property_type, name='producer_property_type'),
+    path('pharmacological_group', producer_pharmacological_group, name='producer_pharmacological_group'),
+    path('producer_company_update/<int:company_id>/', producer_company_update, name='producer_company_update'),
+    path('company_create', producer_company_create, name='producer_company_create'),
+    path('company_delete/<int:company_id>/', producer_company_delete, name='producer_company_delete'),
+    path('producer_drug_update/<int:drug_id>/', producer_drug_update, name='producer_drug_update'),
+    path('drug_create', producer_drug_create, name='producer_drug_create'),
+    path('drug_delete/<int:drug_id>/', producer_drug_delete, name='producer_drug_delete'),
+]

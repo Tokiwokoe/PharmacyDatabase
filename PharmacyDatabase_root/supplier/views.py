@@ -7,18 +7,19 @@ from .forms import PharmacyForm
 from django.db.models import Max
 
 
-
 @login_required
 def supplier_index(request):
     if request.user.groups.filter(name='administrator').exists():
         # Редирект для администратора
-        return render(request, 'pharmacy/index.html', {'title': 'Режим запросов'})  # Замените 'admin_dashboard' на имя URL-шаблона для административной панели
+        return render(request, 'pharmacy/index.html', {'title': 'Режим запросов'})
     elif request.user.groups.filter(name='supplier').exists():
         # Редирект для поставщика
-        return render(request, 'supplier/index.html')  # Замените 'supplier_dashboard' на имя URL-шаблона для панели поставщика
+        return render(request, 'supplier/index.html')
+    elif request.user.groups.filter(name='supplier').exists():
+        return render(request, 'producer/index.html')
     else:
         # Редирект для остальных пользователей
-        return render(request, 'user/index.html')  # Замените 'user_dashboard' на имя URL-шаблона для панели обычного пользователя
+        return render(request, 'user/index.html')
 
 
 def supplier_dosage_form(request):

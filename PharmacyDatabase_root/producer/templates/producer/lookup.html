@@ -1,0 +1,15 @@
+{% extends 'producer/base.html' %}
+
+{% block content %}
+    <table border="1">
+        <tr>
+            <th>{{ title }}</th>
+        </tr>
+        {% for item in lookup %}
+        <tr>
+            <td>{{ item.name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock content %}
