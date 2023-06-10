@@ -1,7 +1,6 @@
 {% extends 'pharmacy/base.html' %}
 
 {% block content %}
-<a>Добавить компанию-производителя</a>
     <table border="1">
         <tr>
             <th>Название</th>
@@ -17,7 +16,6 @@
             <td>{{ item.address }}</td>
             <td>{{ item.country.name }}</td>
             <td>{{ item.property_type.name }}</td>
-            <td><a href="{% url 'company_change' item.id %}">Изменить</a></td>
         </tr>
         {% endfor %}
     </table>

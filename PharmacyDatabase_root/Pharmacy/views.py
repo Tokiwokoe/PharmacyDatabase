@@ -1,13 +1,29 @@
 from django.db import connection
 from django.shortcuts import render, redirect
+import supplier
 from .models import *
 import json
 from openpyxl import Workbook
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from supplier.views import supplier_index
 
 
+@login_required  # Декоратор, требующий аутентификации пользователя
 def index(request):
-    return render(request, 'pharmacy/index.html', {'title': 'Главная страница'})
+    if request.user.groups.filter(name='pharmacy_admin').exists():
+        # Редирект для администратора
+        return render(request, 'pharmacy/index.html', {'title': 'Режим запросов'})
+    elif request.user.groups.filter(name='supplier').exists():
+        # Редирект для поставщика
+        return supplier.views.supplier_index(request)
+    else:
+        return HttpResponse('Unknown user type')
+"""
+    else:
+        # Редирект для остальных пользователей
+        return render(request, 'user/index.html')
+        """
 
 
 def property_type(request):
@@ -50,7 +66,7 @@ def company(request):
     return render(request, 'pharmacy/company.html', {'name': 'company', 'table': company, 'title': 'Компании-производители'})
 
 
-def property_type_change(request, id):
+def property_type_update(request, id):
     lookup = PropertyType.objects.get(id=id)
     if request.method == 'POST':
         lookup.name = request.POST.get('name')
@@ -59,7 +75,7 @@ def property_type_change(request, id):
     return render(request, 'pharmacy/lookup_change.html', {'lookup': lookup, 'name': 'property_type'})
 
 
-def dosage_form_change(request, id):
+def dosage_form_update(request, id):
     lookup = DosageForm.objects.get(id=id)
     if request.method == 'POST':
         lookup.name = request.POST.get('name')
@@ -68,7 +84,7 @@ def dosage_form_change(request, id):
     return render(request, 'pharmacy/lookup_change.html', {'lookup': lookup, 'name': 'dosage_form'})
 
 
-def district_change(request, id):
+def district_update(request, id):
     lookup = District.objects.get(id=id)
     if request.method == 'POST':
         lookup.name = request.POST.get('name')
@@ -77,7 +93,7 @@ def district_change(request, id):
     return render(request, 'pharmacy/lookup_change.html', {'lookup': lookup, 'name': 'district'})
 
 
-def country_change(request, id):
+def country_update(request, id):
     lookup = Country.objects.get(id=id)
     if request.method == 'POST':
         lookup.name = request.POST.get('name')
@@ -86,7 +102,7 @@ def country_change(request, id):
     return render(request, 'pharmacy/lookup_change.html', {'lookup': lookup, 'name': 'country'})
 
 
-def pharmacological_group_change(request, id):
+def pharmacological_group_update(request, id):
     lookup = PharmacologicalGroup.objects.get(id=id)
     if request.method == 'POST':
         lookup.name = request.POST.get('name')
@@ -95,35 +111,24 @@ def pharmacological_group_change(request, id):
     return render(request, 'pharmacy/lookup_change.html', {'lookup': lookup, 'name': 'pharmacological_group'})
 
 
-def pharmacy_change(request, id):
-    table = Pharmacy.objects.get(id=id)
-    return render(request, 'pharmacy/pharmacy_change.html', {'table': table})
-
-
-def drug_change(request, id):
-    table = Drug.objects.get(id=id)
-    return render(request, 'pharmacy/drug_change.html', {'table': table})
-
-
-def company_change(request, id):
-    table = Company.objects.get(id=id)
-    return render(request, 'pharmacy/company_change.html', {'table': table})
-
-
 def execute_query(request):
-    if request.method == 'POST':
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM query15(4);")
-            results = cursor.fetchall()
-
-        return render(request, 'pharmacy/result.html', {'results': results})
-
-    return render(request, 'index.html')
+    districts = District.objects.all()
+    for district in districts:
+        print(district.name)
+    return render(request, 'pharmacy/index.html', {'districts': districts})
 
 
-def generate_chart(request):
+def queries(request, value, data):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM query15(4);")
+        cursor.execute(f"SELECT * FROM query{value}({data});")
+        results = cursor.fetchall()
+        title = ['Симметричное внутреннее соединение с условием отбора по внешнему ключу (часть 1)', 'Симметричное внутреннее соединение с условием отбора по внешнему ключу (часть 2)', 'Симметричное внутреннее соединение с условием отбора по датам (часть 1)', 'Симметричное внутреннее соединение с условием отбора по датам (часть 2)', 'Симметричное внутреннее соединение без условия (часть 1)', 'Симметричное внутреннее соединение без условия (часть 2)', 'Симметричное внутреннее соединение без условия (часть 3)', 'Левое внешнее соединение', 'Правое внешнее соединение', 'Запрос на запросе по принципу левого соединения', 'Итоговый запрос без условия', 'Итоговый запрос с условием на группы', 'Итоговый запрос с условием на данные', 'Итоговый запрос с условием на данные и на группы', 'Итоговый запрос с условием на данные и на группы', 'Запрос с подзапросом']
+    return render(request, 'pharmacy/result.html', {'results': results, 'number': value, 'title': title[value-1]})
+
+
+def generate_chart(request, value):
+    with connection.cursor() as cursor:
+        cursor.execute(f"SELECT * FROM query{value}(4);")
         results = cursor.fetchall()
 
     # Process the results and prepare data for the chart
@@ -139,9 +144,9 @@ def generate_chart(request):
     return render(request, 'pharmacy/chart.html', {'chart_data': json.dumps(chart_data)})
 
 
-def export_to_excel(request):
+def export_to_excel(request, value):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM query15(4);")
+        cursor.execute(f"SELECT * FROM query{value}(4);")
         results = cursor.fetchall()
 
     # Create a new workbook and get the active sheet

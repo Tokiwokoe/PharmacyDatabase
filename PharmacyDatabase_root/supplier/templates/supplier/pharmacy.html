@@ -1,6 +1,8 @@
-{% extends 'pharmacy/base.html' %}
+{% extends 'supplier/base.html' %}
 
 {% block content %}
+<a href="{% url 'supplier_pharmacy_create' %}" class="btn btn-primary">Добавить аптеку</a>
+
 <table border="1">
     <tr>
         <th>Номер аптеки</th>
@@ -14,6 +16,11 @@
         <td>{{ item.phone }}</td>
         <td>{{ item.district.name }}</td>
         <td>{{ item.property_type.name }}</td>
+        <td>
+            {% if item.id == 101 %}
+                <a href="{% url 'supplier_pharmacy_update' pharmacy_id=item.id %}">Изменить</a>
+            {% endif %}
+        </td>
     </tr>
     {% endfor %}
 </table>

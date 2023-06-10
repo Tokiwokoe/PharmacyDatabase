@@ -1,9 +1,59 @@
 {% extends 'pharmacy/base.html' %}
 
 {% block content %}
-    <h1>Execute Query</h1>
-    <form method="post" action="{% url 'execute_query' %}">
-        {% csrf_token %}
-        <input type="submit" value="Execute">
-    </form>
+<script>
+    function handleDropdownChange() {
+        var dropdown = document.getElementById("my_dropdown");
+        var selectedValue = dropdown.options[dropdown.selectedIndex].value;
+
+        // Отображение/скрытие второго выпадающего списка в зависимости от выбранного значения
+        var districtDropdown = document.getElementById("district_dropdown");
+        if (selectedValue === "1" || selectedValue === "2") {
+            secondDropdown.style.display = "block";
+        } else {
+            secondDropdown.style.display = "none";
+        }
+    }
+
+    function redirectToURL() {
+        var dropdown = document.getElementById("my_dropdown");
+        var selectedValue = dropdown.options[dropdown.selectedIndex].value;
+        var url = "http://127.0.0.1:8080/pharmacy_admin/query/" + selectedValue;
+        window.location.href = url;
+        return false;  // Отменяет отправку формы на стандартный URL
+    }
+</script>
+
+<form onsubmit="return redirectToURL()">
+    {% csrf_token %}
+    <div id="form_container">
+        <select id="my_dropdown" name="my_dropdown" onchange="handleDropdownChange()">
+            <option value="1">Симметричное внутреннее соединение с условием отбора по внешнему ключу (часть 1)</option>
+            <option value="2">Симметричное внутреннее соединение с условием отбора по внешнему ключу (часть 2)</option>
+            <option value="3">Симметричное внутреннее соединение с условием отбора по датам (часть 1)</option>
+            <option value="4">Симметричное внутреннее соединение с условием отбора по датам (часть 2)</option>
+            <option value="5">Симметричное внутреннее соединение без условия (часть 1)</option>
+            <option value="6">Симметричное внутреннее соединение без условия (часть 2)</option>
+            <option value="7">Симметричное внутреннее соединение без условия (часть 3)</option>
+            <option value="8">Левое внешнее соединение</option>
+            <option value="9">Правое внешнее соединение</option>
+            <option value="10">Запрос на запросе по принципу левого соединения</option>
+            <option value="11">Итоговый запрос без условия</option>
+            <option value="12">Итоговый запрос с условием на группы</option>
+            <option value="13">Итоговый запрос с условием на данные</option>
+            <option value="14">Итоговый запрос с условием на данные и на группы</option>
+            <option value="15">Итоговый запрос с условием на данные и на группы</option>
+            <option value="16">Запрос с подзапросом</option>
+        </select>
+
+        <!-- Второй выпадающий список -->
+        <select id="district_dropdown" name="district_dropdown" style="display: block;">
+            {% for district in districts %}
+            <option>{{ district.name }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="submit" value="Выполнить запрос">
+    </div>
+</form>
 {% endblock content %}

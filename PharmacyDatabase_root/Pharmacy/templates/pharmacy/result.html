@@ -1,32 +1,99 @@
 {% extends 'pharmacy/base.html' %}
 {% block content %}
 <title>Запросы</title>
-    <h2>Запрос на запросе по принципу итогового запроса</h2>
+    <h2>{{ title }}</h2>
+    {% if number == 13 or number == 14 or number == 15 %}
+        <div>
+            <form method="post" action="{% url 'generate_chart' %}" style="display: inline-block;">
+                {% csrf_token %}
+                <input type="submit" value="Диаграмма">
+            </form>
+
+            <form method="post" action="{% url 'export_to_excel' %}" style="display: inline-block;">
+                {% csrf_token %}
+                <input type="submit" value="Экспорт в Excel">
+            </form>
+        </div>
+    {% endif %}
     <table border="1">
         <thead>
+        {% if number == 1%}
+            <tr>
+                <th>Номер аптеки</th>
+                <th>Телефон</th>
+                <th>Тип собственности</th>
+            </tr>
+        {% endif %}
+        {% if number == 2 or number == 5%}
+            <tr>
+                <th>Название препарата</th>
+                <th>Компания-производитель</th>
+                <th>Форма выпуска</th>
+                <th>Фармакологическая группа</th>
+            </tr>
+        {% endif %}
+        {% if number == 3%}
+            <tr>
+                <th>Название препарата</th>
+                <th>Компания-производитель</th>
+                <th>Форма выпуска</th>
+                <th>Фармакологическая группа</th>
+                <th>Дата поставки</th>
+            </tr>
+        {% endif %}
+        {% if number == 4%}
+            <tr>
+                <th>Номер аптеки</th>
+                <th>Название препарата</th>
+                <th>Дата поставки</th>
+            </tr>
+        {% endif %}
+        {% if number == 6%}
+            <tr>
+                <th>Номер аптеки</th>
+                <th>Район</th>
+                <th>Тип собственности</th>
+            </tr>
+        {% endif %}
+        {% if number == 7 or number == 10%}
+            <tr>
+                <th>Название компании</th>
+                <th>Страна</th>
+            </tr>
+        {% endif %}
+        {% if number == 8%}
+            <tr>
+                <th>Название компании</th>
+                <th>Страна</th>
+                <th>Адрес</th>
+            </tr>
+        {% endif %}
+        {% if number == 9%}
             <tr>
                 <th>Компания-производитель</th>
-                <th>Всего лекарств</th>
+                <th>Название препарата</th>
             </tr>
+        {% endif %}
+        {% if number == 11 or number == 12 or number == 13 or number == 14 or number == 15 %}
+            <tr>
+                <th>Название компании</th>
+                <th>Количество препаратов</th>
+            </tr>
+        {% endif %}
+        {% if number == 16%}
+            <tr>
+                <th>Название препарата</th>
+            </tr>
+        {% endif %}
         </thead>
         <tbody>
             {% for result in results %}
             <tr>
-                <td>{{ result.0 }}</td>
-                <td>{{ result.1 }}</td>
+                {% for attribute in result %}
+                    <td>{{ attribute }}</td>
+                {% endfor %}
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <div>
-        <form method="post" action="{% url 'generate_chart' %}" style="display: inline-block;">
-            {% csrf_token %}
-            <input type="submit" value="Диаграмма">
-        </form>
-
-        <form method="post" action="{% url 'export_to_excel' %}" style="display: inline-block;">
-            {% csrf_token %}
-            <input type="submit" value="Экспорт в Excel">
-        </form>
-    </div>
 {% endblock content %}

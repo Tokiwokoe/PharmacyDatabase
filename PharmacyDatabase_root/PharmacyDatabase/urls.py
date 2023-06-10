@@ -18,9 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 import Pharmacy.urls
+import supplier.urls
 
 urlpatterns = [
-    path('pharmacy_admin/', include('Pharmacy.urls')),
+    path('accounts/', include('allauth.urls')),
+    path('pharmacy/', include('Pharmacy.urls')),
+    path('supplier/', include('supplier.urls')),
     path('admin/', admin.site.urls),
     path('', Pharmacy.urls.index, name='index'),
 ]
