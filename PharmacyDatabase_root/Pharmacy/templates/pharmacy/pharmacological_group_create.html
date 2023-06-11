@@ -1,0 +1,31 @@
+{% extends 'producer/base.html' %}
+
+{% block content %}
+<h1>Добавление фармакологической группы</h1>
+
+
+<form method="post" action="{% url 'pharmacological_group_create' %}">
+  {% csrf_token %}
+
+  <div class="form-group">
+    <label for="name">Название:</label>
+    <input type="text" class="form-control" id="name" name="name" required>
+  </div>
+
+  <input type="hidden" id="id" name="id" value="{{ form.initial.id }}">
+
+  <button type="submit" class="btn btn-primary">Добавить</button>
+
+  {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+      {% for field_errors in form.errors.values %}
+        {% for error in field_errors %}
+          {{ error }}
+        {% endfor %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+</form>
+
+{% endblock content %}

@@ -194,8 +194,8 @@ def producer_drug_create(request):
 
 
 @login_required
-def producer_drug_delete(request, company_id):
-    drug = get_object_or_404(Pharmacy.models.Drug, id=company_id)
+def producer_drug_delete(request, drug_id):
+    drug = get_object_or_404(Pharmacy.models.Drug, id=drug_id)
 
     if request.method == 'POST':
         drug.delete()

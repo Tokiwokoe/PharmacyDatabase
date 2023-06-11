@@ -15,6 +15,11 @@
             <td>{{ item.company.name }}</td>
             <td>{{ item.dosage_form.name }}</td>
             <td>{{ item.pharmacological_group.name }}</td>
+            <td>
+                {% if item.id == 241 %}
+                    <a href="{% url 'producer_drug_update' drug_id=item.id %}">Изменить</a>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>

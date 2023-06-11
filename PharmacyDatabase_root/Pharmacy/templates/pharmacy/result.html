@@ -4,12 +4,12 @@
     <h2>{{ title }}</h2>
     {% if number == 13 or number == 14 or number == 15 %}
         <div>
-            <form method="post" action="{% url 'generate_chart' %}" style="display: inline-block;">
+            <form method="post" action="{% url 'generate_chart' number%}" style="display: inline-block;">
                 {% csrf_token %}
                 <input type="submit" value="Диаграмма">
             </form>
 
-            <form method="post" action="{% url 'export_to_excel' %}" style="display: inline-block;">
+            <form method="post" action="{% url 'export_to_excel' number %}" style="display: inline-block;">
                 {% csrf_token %}
                 <input type="submit" value="Экспорт в Excel">
             </form>

@@ -1,6 +1,8 @@
 from django.db import connection
+from django.db.models import Max
 from django.shortcuts import render, redirect
 import supplier
+from .forms import DistrictForm, CountryForm, PharmacologicalGroupForm, PropertyTypeForm, DosageFormForm
 from .models import *
 import json
 from openpyxl import Workbook
@@ -10,9 +12,9 @@ from supplier.views import supplier_index
 from producer.views import producer_index
 
 
-@login_required  # Декоратор, требующий аутентификации пользователя
+@login_required
 def index(request):
-    if request.user.groups.filter(name='administrator').exists():
+    if request.user.groups.filter(name='pharmacy_admin').exists():
         # Редирект для администратора
         return render(request, 'pharmacy/index.html', {'title': 'Режим запросов'})
     elif request.user.groups.filter(name='supplier').exists():
@@ -23,6 +25,7 @@ def index(request):
     else:
         # Редирект для остальных пользователей
         return render(request, 'user/index.html')
+
 
 def property_type(request):
     property_type = PropertyType.objects.all()
@@ -110,23 +113,54 @@ def pharmacological_group_update(request, id):
 
 
 def execute_query(request):
-    districts = District.objects.all()
-    for district in districts:
-        print(district.name)
-    return render(request, 'pharmacy/index.html', {'districts': districts})
+    district = District.objects.all()
+    country = Country.objects.all()
+    property_type = PropertyType.objects.all()
+    pharmacological_group = PharmacologicalGroup.objects.all()
+    dosage_form = DosageForm.objects.all()
+    context = {
+        'districts': district,
+        'countries': country,
+        'property_types': property_type,
+        'pharmacological_groups': pharmacological_group,
+        'dosage_forms': dosage_form,
+    }
+    return render(request, 'pharmacy/index.html', context)
 
 
-def queries(request, value, data):
+def queries(request, value):
     with connection.cursor() as cursor:
+        if value == 1 or value == 2:
+            data = '4'
+        if value == 3 or value == 4:
+            data = '\'28-02-2022\''
+        if value == 5 or value == 6 or value == 7 or value == 8 or value == 9 or value == 11:
+            data = ''
+        if value == 10:
+            data = '\'Фармалогикс\''
+        if value == 12:
+            data = '10, 50'
+        if value == 13 or value == 15:
+            data = '4'
+        if value == 14:
+            data = '10, 100, 4'
+        if value == 16:
+            data = '\'Бельгия\''
         cursor.execute(f"SELECT * FROM query{value}({data});")
         results = cursor.fetchall()
-        title = ['Симметричное внутреннее соединение с условием отбора по внешнему ключу (часть 1)', 'Симметричное внутреннее соединение с условием отбора по внешнему ключу (часть 2)', 'Симметричное внутреннее соединение с условием отбора по датам (часть 1)', 'Симметричное внутреннее соединение с условием отбора по датам (часть 2)', 'Симметричное внутреннее соединение без условия (часть 1)', 'Симметричное внутреннее соединение без условия (часть 2)', 'Симметричное внутреннее соединение без условия (часть 3)', 'Левое внешнее соединение', 'Правое внешнее соединение', 'Запрос на запросе по принципу левого соединения', 'Итоговый запрос без условия', 'Итоговый запрос с условием на группы', 'Итоговый запрос с условием на данные', 'Итоговый запрос с условием на данные и на группы', 'Итоговый запрос с условием на данные и на группы', 'Запрос с подзапросом']
+        title = ['Симметричное внутреннее соединение с условием отбора по внешнему ключу (часть 1)', 'Симметричное внутреннее соединение с условием отбора по внешнему ключу (часть 2)', 'Симметричное внутреннее соединение с условием отбора по датам (часть 1)', 'Симметричное внутреннее соединение с условием отбора по датам (часть 2)', 'Симметричное внутреннее соединение без условия (часть 1)', 'Симметричное внутреннее соединение без условия (часть 2)', 'Симметричное внутреннее соединение без условия (часть 3)', 'Левое внешнее соединение', 'Правое внешнее соединение', 'Запрос на запросе по принципу левого соединения', 'Итоговый запрос без условия', 'Итоговый запрос с условием на группы', 'Итоговый запрос с условием на данные', 'Итоговый запрос с условием на данные и на группы', 'Запрос на запросе по принципу итогового запроса', 'Запрос с подзапросом']
     return render(request, 'pharmacy/result.html', {'results': results, 'number': value, 'title': title[value-1]})
 
 
-def generate_chart(request, value):
+def generate_chart(request, number):
+    if number == 13:
+        data = '4'
+    if number == 14:
+        data = '10, 100, 4'
+    if number == 15:
+        data = '4'
     with connection.cursor() as cursor:
-        cursor.execute(f"SELECT * FROM query{value}(4);")
+        cursor.execute(f"SELECT * FROM query{number}({data});")
         results = cursor.fetchall()
 
     # Process the results and prepare data for the chart
@@ -142,9 +176,15 @@ def generate_chart(request, value):
     return render(request, 'pharmacy/chart.html', {'chart_data': json.dumps(chart_data)})
 
 
-def export_to_excel(request, value):
+def export_to_excel(request, number):
+    if number == 13:
+        data = '4'
+    if number == 14:
+        data = '10, 100, 4'
+    if number == 15:
+        data = '4'
     with connection.cursor() as cursor:
-        cursor.execute(f"SELECT * FROM query{value}(4);")
+        cursor.execute(f"SELECT * FROM query{number}({data});")
         results = cursor.fetchall()
 
     # Create a new workbook and get the active sheet
@@ -170,3 +210,121 @@ def export_to_excel(request, value):
     wb.save(response)
 
     return response
+
+
+def district_create(request):
+    if request.method == 'POST':
+        form = DistrictForm(request.POST)
+        if form.is_valid():
+            district = form.save(commit=False)
+            district.created_by = request.user
+            max_id = District.objects.aggregate(Max('id'))['id__max']
+            next_id = max_id + 1 if max_id else 1
+            form.instance.id = next_id
+            form.save()
+            return redirect('district')
+    else:
+        max_id = District.objects.aggregate(Max('id'))['id__max']
+        initial_id = max_id + 1 if max_id else 1
+        form = DistrictForm(initial={'id': initial_id})
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'pharmacy/district_create.html', context)
+
+
+def country_create(request):
+    if request.method == 'POST':
+        form = CountryForm(request.POST)
+        if form.is_valid():
+            country = form.save(commit=False)
+            country.created_by = request.user
+            max_id = Country.objects.aggregate(Max('id'))['id__max']
+            next_id = max_id + 1 if max_id else 1
+            form.instance.id = next_id
+            form.save()
+            return redirect('country')
+    else:
+        max_id = Country.objects.aggregate(Max('id'))['id__max']
+        initial_id = max_id + 1 if max_id else 1
+        form = CountryForm(initial={'id': initial_id})
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'pharmacy/country_create.html', context)
+
+
+def property_type_create(request):
+    if request.method == 'POST':
+        form = PropertyTypeForm(request.POST)
+        if form.is_valid():
+            property_type = form.save(commit=False)
+            property_type.created_by = request.user
+            max_id = PropertyType.objects.aggregate(Max('id'))['id__max']
+            next_id = max_id + 1 if max_id else 1
+            form.instance.id = next_id
+            form.save()
+            return redirect('property_type')
+    else:
+        max_id = PropertyType.objects.aggregate(Max('id'))['id__max']
+        initial_id = max_id + 1 if max_id else 1
+        form = PropertyTypeForm(initial={'id': initial_id})
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'pharmacy/property_type_create.html', context)
+
+
+def dosage_form_create(request):
+    if request.method == 'POST':
+        form = DosageFormForm(request.POST)
+        if form.is_valid():
+            dosage_form = form.save(commit=False)
+            dosage_form.created_by = request.user
+            max_id = DosageForm.objects.aggregate(Max('id'))['id__max']
+            next_id = max_id + 1 if max_id else 1
+            form.instance.id = next_id
+            form.save()
+            return redirect('dosage_form')
+    else:
+        max_id = DosageForm.objects.aggregate(Max('id'))['id__max']
+        initial_id = max_id + 1 if max_id else 1
+        form = DosageFormForm(initial={'id': initial_id})
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'pharmacy/dosage_form_create.html', context)
+
+
+def pharmacological_group_create(request):
+    if request.method == 'POST':
+        form = PharmacologicalGroupForm(request.POST)
+        if form.is_valid():
+            pharmacological_group = form.save(commit=False)
+            pharmacological_group.created_by = request.user
+            max_id = PharmacologicalGroup.objects.aggregate(Max('id'))['id__max']
+            next_id = max_id + 1 if max_id else 1
+            form.instance.id = next_id
+            form.save()
+            return redirect('pharmacological_group')
+    else:
+        max_id = PharmacologicalGroup.objects.aggregate(Max('id'))['id__max']
+        initial_id = max_id + 1 if max_id else 1
+        form = PharmacologicalGroupForm(initial={'id': initial_id})
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'pharmacy/pharmacological_group_create.html', context)
+
+
+

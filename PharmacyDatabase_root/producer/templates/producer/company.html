@@ -18,10 +18,10 @@
             <td>{{ item.country.name }}</td>
             <td>{{ item.property_type.name }}</td>
             <td>
-            {% if item.id == 101 %}
-                <a href="{% url 'producer_company_update' company_id=item.id %}">Изменить</a>
-            {% endif %}
-        </td>
+                {% if item.id == 101 %}
+                    <a href="{% url 'producer_company_update' company_id=item.id %}">Изменить</a>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>

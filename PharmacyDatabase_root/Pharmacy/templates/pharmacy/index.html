@@ -8,17 +8,58 @@
 
         // Отображение/скрытие второго выпадающего списка в зависимости от выбранного значения
         var districtDropdown = document.getElementById("district_dropdown");
-        if (selectedValue === "1" || selectedValue === "2") {
-            secondDropdown.style.display = "block";
+        if (selectedValue === "1") {
+            district_dropdown.style.display = "block";
         } else {
-            secondDropdown.style.display = "none";
+            district_dropdown.style.display = "none";
+        }
+        if (selectedValue === "2") {
+            pharmacological_group_dropdown.style.display = "block";
+        } else {
+            pharmacological_group_dropdown.style.display = "none";
+        }
+        if (selectedValue === "3" | selectedValue === "4") {
+            date_field.style.display = "block";
+        } else {
+            date_field.style.display = "none";
+        }
+        if (selectedValue === "10") {
+            input_field.style.display = "block";
+        } else {
+            input_field.style.display = "none";
+        }
+        if (selectedValue === "12") {
+            number_field1.style.display = "block";
+            number_field2.style.display = "block";
+        } else {
+            number_field1.style.display = "none";
+            number_field2.style.display = "none";
+        }
+        if (selectedValue === "13") {
+            number_field3.style.display = "block";
+        } else {
+            number_field3.style.display = "none";
+        }
+        if (selectedValue === "14") {
+            number_field1.style.display = "block";
+            number_field2.style.display = "block";
+            number_field3.style.display = "block";
+        } else {
+            number_field1.style.display = "none";
+            number_field2.style.display = "none";
+            number_field3.style.display = "none";
+        }
+        if (selectedValue === "15") {
+            number_field3.style.display = "block";
+        } else {
+            number_field3.style.display = "none";
         }
     }
 
     function redirectToURL() {
         var dropdown = document.getElementById("my_dropdown");
         var selectedValue = dropdown.options[dropdown.selectedIndex].value;
-        var url = "http://127.0.0.1:8080/pharmacy_admin/query/" + selectedValue;
+        var url = "http://127.0.0.1:8080/pharmacy/query/" + selectedValue;
         window.location.href = url;
         return false;  // Отменяет отправку формы на стандартный URL
     }
@@ -42,16 +83,50 @@
             <option value="12">Итоговый запрос с условием на группы</option>
             <option value="13">Итоговый запрос с условием на данные</option>
             <option value="14">Итоговый запрос с условием на данные и на группы</option>
-            <option value="15">Итоговый запрос с условием на данные и на группы</option>
+            <option value="15">Запрос на запросе по принципу итогового запроса</option>
             <option value="16">Запрос с подзапросом</option>
         </select>
 
         <!-- Второй выпадающий список -->
         <select id="district_dropdown" name="district_dropdown" style="display: block;">
-            {% for district in districts %}
-            <option>{{ district.name }}</option>
-            {% endfor %}
+            <option>Будённовский</option>
+            <option>Ворошиловский</option>
+            <option>Киевский</option>
+            <option>Кировский</option>
+            <option>Куйбышевский</option>
+            <option>Петровский</option>
+            <option>Пролетарский</option>
+            <option>Калининский</option>
+            <option>Ленинский</option>
         </select>
+
+        <select id="pharmacological_group_dropdown" name="pharmacological_group_dropdown" style="display: none;">
+            <option>Сердечно-сосудистое</option>
+            <option>Болеутоляющее</option>
+            <option>Противовоспалительное</option>
+            <option>Антибиотик</option>
+            <option>Антикоагулянт</option>
+            <option>Антидепрессант</option>
+            <option>Антисептик</option>
+            <option>Антиаллергическое</option>
+            <option>Антигипертензивное</option>
+            <option>Антиспазматик</option>
+            <option>Гормональное</option>
+            <option>Противоопухолевое</option>
+            <option>Антигистаминное</option>
+            <option>Противоревматическое</option>
+            <option>Противомикробное</option>
+            <option>Миорелаксант</option>
+            <option>Противоаритмическое</option>
+        </select>
+
+        <input type="date" id="date_field" name="date_field" style="display: none;">
+        <input type="text" id="input_field" name="input_field" style="display: none;">
+        <input type="number" id="number_field1" name="number_field1" style="display: none;" placeholder="Введите id1">
+        <input type="number" id="number_field2" name="number_field2" style="display: none;" placeholder="Введите id2">
+        <input type="number" id="number_field3" name="number_field3" style="display: none;" placeholder="Введите количество препаратов">
+
+
 
         <input type="submit" value="Выполнить запрос">
     </div>
