@@ -1,9 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 import datetime
-
-from django.db.models import UniqueConstraint
-from psqlextra.indexes import UniqueIndex, ConditionalUniqueIndex
+from psqlextra.indexes import UniqueIndex
 from psqlextra.types import PostgresPartitioningMethod
 from psqlextra.models import PostgresPartitionedModel
 

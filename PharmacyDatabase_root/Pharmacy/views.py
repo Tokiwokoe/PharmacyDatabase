@@ -1,15 +1,12 @@
 from django.db import connection
 from django.db.models import Max
 from django.shortcuts import render, redirect
-import supplier
 from .forms import DistrictForm, CountryForm, PharmacologicalGroupForm, PropertyTypeForm, DosageFormForm
 from .models import *
 import json
 from openpyxl import Workbook
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from supplier.views import supplier_index
-from producer.views import producer_index
 
 
 @login_required
