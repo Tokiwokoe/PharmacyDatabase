@@ -16,14 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
-import Pharmacy.urls
+import pharmacy_admin.urls
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
-    path('pharmacy/', include('Pharmacy.urls')),
+    path('pharmacy_admin/', include('pharmacy_admin.urls')),
     path('supplier/', include('supplier.urls')),
     path('producer/', include('producer.urls')),
     path('admin/', admin.site.urls),
-    path('', Pharmacy.urls.index, name='index'),
+    path('', pharmacy_admin.urls.index, name='index'),
 ]

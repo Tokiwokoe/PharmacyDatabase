@@ -1,32 +1,32 @@
 from django import forms
-import Pharmacy.models
+import pharmacy_admin.models
 
 
 class DistrictForm(forms.ModelForm):
     class Meta:
-        model = Pharmacy.models.District
+        model = pharmacy_admin.models.District
         fields = ['name']
 
 
 class CountryForm(forms.ModelForm):
     class Meta:
-        model = Pharmacy.models.Country
+        model = pharmacy_admin.models.Country
         fields = ['name']
 
 
 class DosageFormForm(forms.ModelForm):
     class Meta:
-        model = Pharmacy.models.DosageForm
+        model = pharmacy_admin.models.DosageForm
         fields = ['name']
 
 
 class PharmacologicalGroupForm(forms.ModelForm):
     class Meta:
-        model = Pharmacy.models.PharmacologicalGroup
+        model = pharmacy_admin.models.PharmacologicalGroup
         fields = ['name']
 
 
 class PropertyTypeForm(forms.ModelForm):
     class Meta:
-        model = Pharmacy.models.PropertyType
+        model = pharmacy_admin.models.PropertyType
         fields = ['name']

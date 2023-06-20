@@ -2,7 +2,7 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-import Pharmacy.models
+import pharmacy_admin.models
 from .forms import CompanyForm, DrugForm
 from django.db.models import Max
 
@@ -23,48 +23,48 @@ def producer_index(request):
 
 
 def producer_dosage_form(request):
-    dosage_form = Pharmacy.models.DosageForm.objects.all()
+    dosage_form = pharmacy_admin.models.DosageForm.objects.all()
     return render(request, 'producer/lookup.html', {'name': 'dosage_form', 'lookup': dosage_form, 'title': 'Формы выпуска'})
 
 
 def producer_property_type(request):
-    property_type = Pharmacy.models.PropertyType.objects.all()
+    property_type = pharmacy_admin.models.PropertyType.objects.all()
     return render(request, 'producer/lookup.html', {'name': 'property_type', 'lookup': property_type, 'title': 'Типы собственности'})
 
 
 def producer_district(request):
-    district = Pharmacy.models.District.objects.all()
+    district = pharmacy_admin.models.District.objects.all()
     return render(request, 'producer/lookup.html', {'name': 'district', 'lookup': district, 'title': 'Районы'})
 
 
 def producer_country(request):
-    country = Pharmacy.models.Country.objects.all()
+    country = pharmacy_admin.models.Country.objects.all()
     return render(request, 'producer/lookup.html', {'name': 'country', 'lookup': country, 'title': 'Страны'})
 
 
 def producer_pharmacological_group(request):
-    pharmacological_group = Pharmacy.models.PharmacologicalGroup.objects.all()
+    pharmacological_group = pharmacy_admin.models.PharmacologicalGroup.objects.all()
     return render(request, 'producer/lookup.html', {'name': 'pharmacological_group', 'lookup': pharmacological_group, 'title': 'Фармакологические группы'})
 
 
 def producer_pharmacy(request):
-    pharmacy = Pharmacy.models.Pharmacy.objects.all()
+    pharmacy = pharmacy_admin.models.Pharmacy.objects.all()
     return render(request, 'producer/pharmacy.html', {'name': 'pharmacy', 'table': pharmacy, 'title': 'Аптеки'})
 
 
 def producer_drug(request):
-    drug = Pharmacy.models.Drug.objects.all()
+    drug = pharmacy_admin.models.Drug.objects.all()
     return render(request, 'producer/drug.html', {'name': 'drug', 'table': drug, 'title': 'Препараты'})
 
 
 def producer_company(request):
-    company = Pharmacy.models.Company.objects.all()
+    company = pharmacy_admin.models.Company.objects.all()
     return render(request, 'producer/company.html', {'name': 'company', 'table': company, 'title': 'Компании-производители'})
 
 
 @login_required
 def producer_company_update(request, company_id):
-    company = get_object_or_404(Pharmacy.models.Company, id=company_id)
+    company = get_object_or_404(pharmacy_admin.models.Company, id=company_id)
 
     if request.method == 'POST':
         # Получить данные из POST-запроса
@@ -85,8 +85,8 @@ def producer_company_update(request, company_id):
         return redirect('producer_company')
 
     # Если метод запроса не POST, отобразить форму для редактирования аптеки
-    country = Pharmacy.models.Country.objects.all()
-    property_types = Pharmacy.models.PropertyType.objects.all()
+    country = pharmacy_admin.models.Country.objects.all()
+    property_types = pharmacy_admin.models.PropertyType.objects.all()
 
     return render(request, 'producer/company_update.html', {'company': company, 'countries': country, 'property_types': property_types})
 
@@ -97,18 +97,18 @@ def producer_company_create(request):
         if form.is_valid():
             company = form.save(commit=False)
             company.created_by = request.user
-            max_id = Pharmacy.models.Company.objects.aggregate(Max('id'))['id__max']
+            max_id = pharmacy_admin.models.Company.objects.aggregate(Max('id'))['id__max']
             next_id = max_id + 1 if max_id else 1
             form.instance.id = next_id
             form.save()
             return redirect('producer_company')
     else:
-        max_id = Pharmacy.models.Company.objects.aggregate(Max('id'))['id__max']
+        max_id = pharmacy_admin.models.Company.objects.aggregate(Max('id'))['id__max']
         initial_id = max_id + 1 if max_id else 1
         form = CompanyForm(initial={'id': initial_id})
 
-    country = Pharmacy.models.Country.objects.all()
-    property_types = Pharmacy.models.PropertyType.objects.all()
+    country = pharmacy_admin.models.Country.objects.all()
+    property_types = pharmacy_admin.models.PropertyType.objects.all()
 
     context = {
         'form': form,
@@ -121,7 +121,7 @@ def producer_company_create(request):
 
 @login_required
 def producer_company_delete(request, company_id):
-    company = get_object_or_404(Pharmacy.models.Company, id=company_id)
+    company = get_object_or_404(pharmacy_admin.models.Company, id=company_id)
 
     if request.method == 'POST':
         company.delete()
@@ -132,7 +132,7 @@ def producer_company_delete(request, company_id):
 
 @login_required
 def producer_drug_update(request, drug_id):
-    drug = get_object_or_404(Pharmacy.models.Drug, id=drug_id)
+    drug = get_object_or_404(pharmacy_admin.models.Drug, id=drug_id)
 
     if request.method == 'POST':
         # Получить данные из POST-запроса
@@ -149,9 +149,9 @@ def producer_drug_update(request, drug_id):
         return redirect('producer_drug')
 
     # Если метод запроса не POST, отобразить форму для редактирования аптеки
-    company = Pharmacy.models.Company.objects.all()
-    dosage_form = Pharmacy.models.DosageForm.objects.all()
-    pharmacological_group = Pharmacy.models.PharmacologicalGroup.objects.all()
+    company = pharmacy_admin.models.Company.objects.all()
+    dosage_form = pharmacy_admin.models.DosageForm.objects.all()
+    pharmacological_group = pharmacy_admin.models.PharmacologicalGroup.objects.all()
 
     context = {
         'drug': drug,
@@ -169,19 +169,19 @@ def producer_drug_create(request):
         if form.is_valid():
             drug = form.save(commit=False)
             drug.created_by = request.user
-            max_id = Pharmacy.models.Drug.objects.aggregate(Max('id'))['id__max']
+            max_id = pharmacy_admin.models.Drug.objects.aggregate(Max('id'))['id__max']
             next_id = max_id + 1 if max_id else 1
             form.instance.id = next_id
             form.save()
             return redirect('producer_drug')
     else:
-        max_id = Pharmacy.models.Drug.objects.aggregate(Max('id'))['id__max']
+        max_id = pharmacy_admin.models.Drug.objects.aggregate(Max('id'))['id__max']
         initial_id = max_id + 1 if max_id else 1
         form = DrugForm(initial={'id': initial_id})
 
-    company = Pharmacy.models.Company.objects.all()
-    dosage_form = Pharmacy.models.DosageForm.objects.all()
-    pharmacological_group = Pharmacy.models.PharmacologicalGroup.objects.all()
+    company = pharmacy_admin.models.Company.objects.all()
+    dosage_form = pharmacy_admin.models.DosageForm.objects.all()
+    pharmacological_group = pharmacy_admin.models.PharmacologicalGroup.objects.all()
 
     context = {
         'form': form,
@@ -195,7 +195,7 @@ def producer_drug_create(request):
 
 @login_required
 def producer_drug_delete(request, drug_id):
-    drug = get_object_or_404(Pharmacy.models.Drug, id=drug_id)
+    drug = get_object_or_404(pharmacy_admin.models.Drug, id=drug_id)
 
     if request.method == 'POST':
         drug.delete()

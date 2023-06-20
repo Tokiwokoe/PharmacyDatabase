@@ -1,5 +1,5 @@
 from django.urls import path
-from Pharmacy.views import *
+from pharmacy_admin.views import *
 
 urlpatterns = [
     path('', execute_query, name='execute_query'),

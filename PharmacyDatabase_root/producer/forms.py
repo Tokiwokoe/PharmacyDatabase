@@ -1,14 +1,14 @@
 from django import forms
-import Pharmacy.models
+import pharmacy_admin.models
 
 
 class CompanyForm(forms.ModelForm):
     class Meta:
-        model = Pharmacy.models.Company
+        model = pharmacy_admin.models.Company
         fields = ['name', 'year', 'address', 'country', 'property_type']
 
 
 class DrugForm(forms.ModelForm):
     class Meta:
-        model = Pharmacy.models.Drug
+        model = pharmacy_admin.models.Drug
         fields = ['name', 'company', 'dosage_form', 'pharmacological_group']

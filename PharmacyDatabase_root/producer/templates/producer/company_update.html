@@ -1,18 +1,18 @@
 <h1>Редактирование компани</h1>
 
-<form method="post" action="{% url 'producer_drug_update' drug.id %}">
+<form method="post" action="{% url 'producer_drug_update' company.id %}">
   {% csrf_token %}
 
   <div class="form-group">
     <label for="name">Название компании:</label>
-    <input type="text" class="form-control" id="name" name="name" value="{{ drug.name }}">
+    <input type="text" class="form-control" id="name" name="name" value="{{ company.name }}">
   </div>
 
   <div class="form-group">
     <label for="property_type">Тип собственности:</label>
     <select class="form-control" id="property_type" name="property_type">
       {% for property_type in property_types %}
-        <option value="{{ property_type.id }}" {% if property_type.id == drug.property_type.id %}selected{% endif %}>{{ property_type.name }}</option>
+        <option value="{{ property_type.id }}" {% if property_type.id == company.property_type.id %}selected{% endif %}>{{ property_type.name }}</option>
       {% endfor %}
     </select>
   </div>
@@ -21,22 +21,22 @@
     <label for="country">Страна:</label>
     <select class="form-control" id="country" name="country">
       {% for country in countries %}
-        <option value="{{ country.id }}" {% if country.id == drug.country.id %}selected{% endif %}>{{ country.name }}</option>
+        <option value="{{ country.id }}" {% if country.id == company.country.id %}selected{% endif %}>{{ country.name }}</option>
       {% endfor %}
     </select>
   </div>
 
   <div class="form-group">
     <label for="address">Адрес:</label>
-    <input type="text" class="form-control" id="address" name="address" value="{{ drug.address }}">
+    <input type="text" class="form-control" id="address" name="address" value="{{ company.address }}">
   </div>
 
   <div class="form-group">
     <label for="year">Год открытия:</label>
-    <input type="number" class="form-control" id="year" name="year" value="{{ drug.year }}">
+    <input type="number" class="form-control" id="year" name="year" value="{{ company.year }}">
   </div>
 
   <button type="submit" class="btn btn-primary">Сохранить</button>
-  <a href="{% url 'producer_drug_delete' drug.id %}" class="btn btn-danger">Удалить</a>
+  <a href="{% url 'producer_company_delete' company.id %}" class="btn btn-danger">Удалить</a>
 
 </form>

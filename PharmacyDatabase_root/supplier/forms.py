@@ -1,8 +1,8 @@
 from django import forms
-import Pharmacy.models
+import pharmacy_admin.models
 
 
 class PharmacyForm(forms.ModelForm):
     class Meta:
-        model = Pharmacy.models.Pharmacy
+        model = pharmacy_admin.models.Pharmacy
         fields = ['number', 'property_type', 'district', 'phone']
